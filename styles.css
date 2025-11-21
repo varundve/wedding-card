@@ -143,8 +143,8 @@ body {
 }
 
 .ring-diamond {
-    width: 60px;
-    height: 60px;
+    width: 3em;
+    height: 3em;
     background: linear-gradient(135deg, #FFFFFF 0%, #E8E8E8 50%, #FFFFFF 100%);
     clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
     animation: diamondShine 2s infinite;
@@ -624,6 +624,7 @@ button:disabled {
     }
 
     .song-container {
+        margin-top: 60vh;
         height: 120vh;
         padding: 20px 15px;
         border-radius: 15px;
@@ -842,6 +843,7 @@ audio {
 
     .song-container{
            height: 100vh;
+        margin-top: 10vh;
     }
 
 }

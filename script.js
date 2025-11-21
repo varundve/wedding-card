@@ -111,6 +111,8 @@ let isPlaying = false;
 let currentTime = 0;
 let songDuration = 0;
 
+
+
 const lyrics = [
     { time: 0.5, text: "🎵 Ehsaas" },
     { time: 2, text: "Teri nazron ka" },
