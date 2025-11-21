@@ -1,9 +1,8 @@
+let currentPageIndex = 0;
+const pages = document.querySelectorAll('.page');
+const totalPages = pages.length;
 
-    let currentPageIndex = 0;
-    const pages = document.querySelectorAll('.page');
-    const totalPages = pages.length;
-
-    function showPage(index) {
+function showPage(index) {
     pages.forEach((page, i) => {
         page.classList.remove('active');
         if (i === index) page.classList.add('active');
@@ -11,100 +10,108 @@
     currentPageIndex = index;
     document.getElementById('currentPage').textContent = index + 1;
     document.querySelectorAll('.dot').forEach((dot, i) => {
-    dot.classList.toggle('active', i === index);
+        dot.classList.toggle('active', i === index);
+    });
+}
+
+let startX = 0, endX = 0;
+let startY = 0, endY = 0;
+let isMouseDown = false;
+
+function startSwipe(x, y) {
+    startX = x;
+    startY = y;
+    endX = x;
+    endY = y;
+}
+
+function moveSwipe(x, y) {
+    endX = x;
+    endY = y;
+}
+
+function endSwipe() {
+    const dx = endX - startX;
+    const dy = endY - startY;
+
+    if (Math.abs(dx) < Math.abs(dy)) return;
+    if (Math.abs(dx) < 60) return;
+
+    if (dx < 0) changePage(1);
+    else changePage(-1);
+}
+
+document.addEventListener("touchstart", e => {
+    startSwipe(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
 });
-    }
 
+document.addEventListener("touchmove", e => {
+    moveSwipe(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+});
 
+document.addEventListener("touchend", e => {
+    endX = e.changedTouches[0].clientX;
+    endY = e.changedTouches[0].clientY;
+    endSwipe();
+});
 
-    let startX = 0;
-    let endX = 0;
-    let isMouseDown = false;
+document.addEventListener("mousedown", e => {
+    isMouseDown = true;
+    startSwipe(e.clientX, e.clientY);
+});
 
-    function startSwipe(x) {
-        startX = x;
-        endX = x;
-    }
+document.addEventListener("mousemove", e => {
+    if (!isMouseDown) return;
+    moveSwipe(e.clientX, e.clientY);
+});
 
-    function moveSwipe(x) {
-        endX = x;
-    }
+document.addEventListener("mouseup", e => {
+    if (!isMouseDown) return;
+    isMouseDown = false;
+    endX = e.clientX;
+    endY = e.clientY;
+    endSwipe();
+});
 
-    function endSwipe() {
-        const swipeDistance = endX - startX;
-        if (Math.abs(swipeDistance) < 60) return;
-        if (swipeDistance < 0) changePage(1);
-        else changePage(-1);
-    }
-
-    document.addEventListener("touchstart", e => {
-        startSwipe(e.changedTouches[0].clientX);
-    });
-
-    document.addEventListener("touchend", e => {
-        endX = e.changedTouches[0].clientX;
-        endSwipe();
-    });
-
-    document.addEventListener("mousedown", e => {
-        isMouseDown = true;
-        startSwipe(e.clientX);
-    });
-
-    document.addEventListener("mousemove", e => {
-        if (!isMouseDown) return;
-        moveSwipe(e.clientX);
-    });
-
-    document.addEventListener("mouseup", () => {
-        if (!isMouseDown) return;
-        isMouseDown = false;
-        endSwipe();
-    });
-
-
-
-
-    function changePage(direction) {
-    let newIndex = (currentPageIndex + direction)%totalPages;
-    if(newIndex <0) newIndex = totalPages-1;
+function changePage(direction) {
+    let newIndex = (currentPageIndex + direction) % totalPages;
+    if (newIndex < 0) newIndex = totalPages - 1;
     showPage(newIndex);
 }
 
-    function goToPage(index) {
+function goToPage(index) {
     showPage(index);
 }
 
-    document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') changePage(-1);
     if (e.key === 'ArrowRight') changePage(1);
 });
 
-    showPage(0);
+showPage(0);
 
-    function createParticles() {
+function createParticles() {
     const page1 = document.querySelector('.page1');
     const particleCount = 15;
     for (let i = 0; i < particleCount; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle star';
-    particle.textContent = '✨';
-    particle.style.left = Math.random() * 100 + '%';
-    particle.style.top = Math.random() * 100 + '%';
-    particle.style.animationDelay = Math.random() * 3 + 's';
-    particle.style.animationDuration = (Math.random() * 15 + 15) + 's';
-    page1.appendChild(particle);
+        const particle = document.createElement('div');
+        particle.className = 'particle star';
+        particle.textContent = '✨';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 3 + 's';
+        particle.style.animationDuration = (Math.random() * 15 + 15) + 's';
+        page1.appendChild(particle);
+    }
 }
-}
 
+let audio = new Audio('./public/music.mpeg');
+audio.loop = true;
+let isPlaying = false;
+let currentTime = 0;
+let songDuration = 0;
 
-    let audio = new Audio('./public/music.mpeg');
-    audio.loop=true;
-    let isPlaying = false;
-    let currentTime = 0;
-    let songDuration = 0;
-
-    const lyrics = [
+const lyrics = [
     { time: 0.5, text: "🎵 Ehsaas" },
     { time: 2, text: "Teri nazron ka" },
     { time: 4, text: "दिल पे hua है असर" },
@@ -119,32 +126,32 @@
     { time: 40, text: "✨ Our love eternal" },
     { time: 45, text: "Tu mera mehboob hai..." },
     { time: 50, text: "💕 Khuda ka tohfa" }
-    ];
+];
 
-    let lyricIndex = 0;
+let lyricIndex = 0;
 
-    audio.addEventListener('loadedmetadata', function() {
+audio.addEventListener('loadedmetadata', function () {
     songDuration = audio.duration;
     const mins = Math.floor(songDuration / 60);
     const secs = Math.floor(songDuration % 60).toString().padStart(2, '0');
     document.getElementById('durationDisplay').textContent = `${mins}:${secs}`;
 });
 
-    function togglePlay() {
+function togglePlay() {
     const playBtn = document.getElementById('playBtn');
     if (isPlaying) {
-    audio.pause();
-    isPlaying = false;
-    playBtn.textContent = '▶';
-} else {
-    audio.play().then(r => console.log(r.toString()));
-    isPlaying = true;
-    playBtn.textContent = '⏸';
-    syncWithAudio();
-}
+        audio.pause();
+        isPlaying = false;
+        playBtn.textContent = '▶';
+    } else {
+        audio.play();
+        isPlaying = true;
+        playBtn.textContent = '⏸';
+        syncWithAudio();
+    }
 }
 
-    function syncWithAudio() {
+function syncWithAudio() {
     if (!isPlaying) return;
     currentTime = audio.currentTime;
     updateProgress();
@@ -152,7 +159,7 @@
     requestAnimationFrame(syncWithAudio);
 }
 
-    function updateProgress() {
+function updateProgress() {
     const progressFill = document.getElementById('progressFill');
     const percentage = (currentTime / songDuration) * 100;
     progressFill.style.width = percentage + '%';
@@ -161,24 +168,26 @@
     document.getElementById('currentTime').textContent = `${mins}:${secs}`;
 }
 
-    function updateLyrics() {
+function updateLyrics() {
     const lyricsDisplay = document.getElementById('lyricsDisplay');
     if (lyricIndex < lyrics.length && lyrics[lyricIndex].time <= currentTime) {
-    const existingLyric = lyricsDisplay.querySelector('.lyric-line');
-    if (existingLyric) {
-    existingLyric.classList.add('exit');
-    setTimeout(() => existingLyric.remove(), 600);
-}
-    const lyricDiv = document.createElement('div');
-    lyricDiv.className = 'lyric-line';
-    lyricDiv.textContent = lyrics[lyricIndex].text;
-    lyricsDisplay.innerHTML = '';
-    lyricsDisplay.appendChild(lyricDiv);
-    lyricIndex++;
-}
+        const existingLyric = lyricsDisplay.querySelector('.lyric-line');
+        if (existingLyric) {
+            existingLyric.classList.add('exit');
+            setTimeout(() => existingLyric.remove(), 600);
+        }
+
+        const lyricDiv = document.createElement('div');
+        lyricDiv.className = 'lyric-line';
+        lyricDiv.textContent = lyrics[lyricIndex].text;
+        lyricsDisplay.innerHTML = '';
+        lyricsDisplay.appendChild(lyricDiv);
+
+        lyricIndex++;
+    }
 }
 
-    function seekSong(event) {
+function seekSong(event) {
     const progressBar = document.getElementById('progressBar');
     const rect = progressBar.getBoundingClientRect();
     const percentage = (event.clientX - rect.left) / rect.width;
@@ -188,5 +197,4 @@
     updateLyrics();
 }
 
-
-    createParticles();
+createParticles();
