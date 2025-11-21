@@ -491,7 +491,7 @@ body {
 }
 
 .nav-buttons {
-    display: flex;
+    display:none;
     justify-content: center;
     gap: 20px;
     padding: 20px;
@@ -822,6 +822,7 @@ button:disabled {
     .details-container {
         max-width: 900px;
     }
+
 }
 
 /* Ensure audio element is responsive */
@@ -838,7 +839,11 @@ audio {
     }
 }
 
-
+@media (min-width: 768px) {
+    .nav-buttons{
+        display: flex;
+    }
+}
 
 
 ::-webkit-scrollbar {

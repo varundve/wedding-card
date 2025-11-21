@@ -13,7 +13,57 @@
     document.querySelectorAll('.dot').forEach((dot, i) => {
     dot.classList.toggle('active', i === index);
 });
-}
+    }
+
+
+
+    let startX = 0;
+    let endX = 0;
+    let isMouseDown = false;
+
+    function startSwipe(x) {
+        startX = x;
+        endX = x;
+    }
+
+    function moveSwipe(x) {
+        endX = x;
+    }
+
+    function endSwipe() {
+        const swipeDistance = endX - startX;
+        if (Math.abs(swipeDistance) < 60) return;
+        if (swipeDistance < 0) changePage(1);
+        else changePage(-1);
+    }
+
+    document.addEventListener("touchstart", e => {
+        startSwipe(e.changedTouches[0].clientX);
+    });
+
+    document.addEventListener("touchend", e => {
+        endX = e.changedTouches[0].clientX;
+        endSwipe();
+    });
+
+    document.addEventListener("mousedown", e => {
+        isMouseDown = true;
+        startSwipe(e.clientX);
+    });
+
+    document.addEventListener("mousemove", e => {
+        if (!isMouseDown) return;
+        moveSwipe(e.clientX);
+    });
+
+    document.addEventListener("mouseup", () => {
+        if (!isMouseDown) return;
+        isMouseDown = false;
+        endSwipe();
+    });
+
+
+
 
     function changePage(direction) {
     let newIndex = (currentPageIndex + direction)%totalPages;
@@ -48,7 +98,8 @@
 }
 
 
-    let audio = new Audio('./public/luminary.mp3');
+    let audio = new Audio('./public/music.mpeg');
+    audio.loop=true;
     let isPlaying = false;
     let currentTime = 0;
     let songDuration = 0;
