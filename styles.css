@@ -624,7 +624,7 @@ button:disabled {
     }
 
     .song-container {
-        max-width: 100%;
+        height: 120vh;
         padding: 20px 15px;
         border-radius: 15px;
     }
@@ -675,10 +675,6 @@ button:disabled {
         margin: 15px 0;
         font-size: 1em;
         line-height: 1.6;
-    }
-
-    .page4 {
-        padding: 20px 15px;
     }
 
     .details-container {
@@ -837,6 +833,17 @@ audio {
         min-width: 44px;
         min-height: 44px;
     }
+    .details-container{
+        margin-top:50vh;
+    }
+    .details-container{
+        margin-top:50vh;
+    }
+
+    .song-container{
+           height: 100vh;
+    }
+
 }
 
 @media (min-width: 768px) {
@@ -870,3 +877,5 @@ audio {
     scrollbar-width: thin;
     scrollbar-color: #cc0000 #1a1a1a;
 }
+
+/*---*/
